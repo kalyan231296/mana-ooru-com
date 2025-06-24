@@ -2,25 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mana Ooru - Ads</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Page - Upload to Firebase</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
 </head>
 <body>
-  <header class="village-header">
-    <h1>📢 Local Ads</h1>
-  </header>
+  <h1>Add New Item</h1>
+  <form id="uploadForm">
+    <input type="text" id="title" placeholder="Enter title" required><br>
+    <input type="file" id="fileInput" accept="image/*" required><br>
+    <button type="submit">Upload</button>
+  </form>
 
-  <section id="ads-list" class="card-grid">
-    <!-- Ads will load here -->
-  </section>
+  <div id="status"></div>
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="shops.html">Shops</a>
-  </nav>
+  <script>
+    // Firebase Config (Replace with your actual config)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="script.js"></script>
+    const app = firebase.initializeApp(firebaseConfig);
+    const storage = firebase.storage();
+    const db = firebase.firestore();
+
+    const form = document.getElementById('uploadForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = document.getElementById('fileInput').files[0];
+      const title = document.getElementById('title').value;
+
+      if (!file || !title) return;
+
+      const storageRef = storage.ref('uploads/' + file.name);
+      const uploadTask = storageRef.put(file);
+
+      status.innerText = 'Uploading...';
+
+      uploadTask.on('state_changed', 
+        null, 
+        error => {
+          status.innerText = 'Upload failed: ' + error;
+        }, 
+        async () => {
+          const url = await uploadTask.snapshot.ref.getDownloadURL();
+          await db.collection('uploads').add({ title, url, created: new Date() });
+          status.innerText = 'Upload successful!';
+          form.reset();
+        }
+      );
+    });
+  </script>
 </body>
 </html>
