@@ -1,11 +1,11 @@
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "APP_ID"
+  apiKey: "AIzaSyA8v_xSk0wb-1ufVLiknOiEelq1vIGgIsQ",
+  authDomain: "mana-45507.firebaseapp.com",
+  databaseURL: "https://mana-45507-default-rtdb.firebaseio.com/",
+  projectId: "mana-45507",
+  storageBucket: "mana-45507.firebasestorage.app",
+  messagingSenderId: "435398254769",
+  appId: "1:435398254769:web:35ab9a6ffdc9abee8c4290"
 };
 
 firebase.initializeApp(firebaseConfig);
